@@ -12,6 +12,7 @@
 
 | Data | Decisão | Justificativa | Trade-off |
 |------|---------|---------------|-----------|
+| 2026-08-05 | Deploy MVP: front Vercel (proxy `/api/*`), back Render (Blueprint), Postgres opcional | Front estático + API são ambientes independentes; proxy elimina CORS em produção | Back free tier dorme (cold start ~40s); SQLite/upload efêmeros sem Postgres |
 | 2026-08-05 | Cartas PT exibem nome/tipo/descrição localizados (`printed_name`, `printed_type_line`, `description`) | Usuário quer conteúdo em português | Descrição cai para inglês (oracle_text) quando não há impressão PT; preço segue USD |
 | 2026-08-05 | Suporte a cartas PT: busca localizada `lang:pt` com match exato do `printed_name` | OCR lê nome impresso; Scryfall não tem operador `printed:` | 2 chamadas por scan quando sem match EN (cache 5min) |
 | 2026-08-05 | Credenciais Google reais configuradas em `back/.env` (OAuth + Vision) | Login real + OCR funcionando | Segredo no ambiente local; `.env` gitignored |

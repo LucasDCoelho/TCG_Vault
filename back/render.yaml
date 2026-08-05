@@ -1,0 +1,41 @@
+# Deploy do back (FastAPI) no Render. Na UI, o valor de cada chave "sync: false"
+# deve ser preenchido manualmente (ver DEPLOY.md na raiz do repositório).
+services:
+  - type: web
+    name: tcg-vault-api
+    runtime: python
+    plan: free
+    autoDeploy: true
+    healthCheckPath: /health
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      # Gera um valor aleatório seguro automaticamente.
+      - key: JWT_SECRET
+        generateValue: true
+      # Preencher manualmente (Client ID do projeto Google).
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      # Preencher manualmente (Client Secret do projeto Google).
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      # Preencher: https://SEU-BACK/auth/callback (mesmo valor registrado no Google Console).
+      - key: GOOGLE_REDIRECT_URI
+        sync: false
+      # Preencher: https://SEU-FRONT (domínio do Vercel).
+      - key: FRONTEND_URL
+        sync: false
+      # OCR: google (exige GOOGLE_API_KEY) | none (sem OCR, busca manual).
+      - key: OCR_PROVIDER
+        value: google
+      # Preencher com a chave do Google Cloud Vision.
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: tcg-vault-db
+          property: connectionString
+
+databases:
+  - name: tcg-vault-db
+    plan: free

@@ -9,6 +9,12 @@ from .routers import auth, cards, scan
 
 app = FastAPI(title=settings.app_name, version="0.1.0")
 
+if settings.jwt_secret == "dev-secret-change-me":
+    print(
+        "ATENCAO: JWT_SECRET em uso eh o default. Defina JWT_SECRET (env) "
+        "antes de expor este servico em producao."
+    )
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[settings.frontend_url, "http://localhost:4200"],

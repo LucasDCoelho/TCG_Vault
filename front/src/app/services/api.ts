@@ -1,4 +1,6 @@
-export const API_BASE = 'http://localhost:8000';
+import { environment } from '../../environments/environment';
+
+export const API_BASE = environment.apiBase;
 
 export function apiUrl(path: string): string {
   return `${API_BASE}${path}`;
