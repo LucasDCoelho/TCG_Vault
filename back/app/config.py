@@ -10,6 +10,13 @@ class Settings(BaseSettings):
     jwt_algorithm: str = "HS256"
     jwt_expire_minutes: int = 60 * 24 * 7
 
+    # Cookie de sessão (HttpOnly). SameSite=None + Secure exigidos em produção
+    # (front em domínio diferente do back). Em LAN local (http://IP), use
+    # COOKIE_SECURE=false e COOKIE_SAMESITE=lax no .env.
+    cookie_name: str = "access_token"
+    cookie_secure: bool = True
+    cookie_samesite: str = "none"
+
     google_client_id: str | None = None
     google_client_secret: str | None = None
     google_redirect_uri: str = "http://localhost:8000/auth/callback"

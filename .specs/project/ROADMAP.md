@@ -12,10 +12,10 @@
 - [x] Cartas PT: nome/tipo/descrição localizados
 - [x] Deploy: front Vercel + back Render + Postgres, OAuth Google em produção
 - [x] MVP **no ar** (login Google ponta a ponta funcionando) — 2026-08-05
+- [x] Segurança pré-divulgação: JWT em cookie HttpOnly (SameSite=None; Secure) + anti-CSRF via Origin
 
 ## Pós-MVP (backlog)
 
-- Segurança pré-divulgação: JWT em HttpOnly cookie
 - Suporte a outros TCGs além de MTG (bases PokéAPI, YuGiOh DB, One Piece)
 - Busca avançada e filtros no cofre (raridade, coleção, valor)
 - Cofres múltiplos (pastas/coleções nomeadas)

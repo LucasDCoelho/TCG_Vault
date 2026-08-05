@@ -21,11 +21,6 @@ class LoginResponse(BaseModel):
     dev_warning: str | None = None
 
 
-class TokenResponse(BaseModel):
-    token: str
-    user: UserOut
-
-
 class ScryfallCard(BaseModel):
     name: str
     set_name: str

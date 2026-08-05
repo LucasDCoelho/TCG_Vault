@@ -19,7 +19,8 @@ export class TopNavComponent {
   protected fullUrl = fullUrl;
 
   logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/login']);
+    this.authService.logout().subscribe({
+      next: () => this.router.navigate(['/login']),
+    });
   }
 }

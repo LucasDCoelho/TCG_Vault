@@ -3,12 +3,13 @@
 Arquitetura: **front estático no Vercel** + **API FastAPI no Render** + **Postgres/SQLite no Render**.
 
 ```
-Vercel (Angular) -- /api/* (rewrite) --> Render (FastAPI) --> Postgres / SQLite
+Vercel (Angular) -- HTTPS direto (cross-origin, cookie) --> Render (FastAPI) --> Postgres / SQLite
 ```
 
-O rewrite do Vercel entrega `/api/auth/login` para `https://API/auth/login` (o prefixo `/api`
-é consumido pelo proxy). Como o navegador só conversa com o domínio do front, **não há CORS em
-produção**. Em dev o front usa `http://localhost:8000` direto (CORS já configurado).
+O front fala **direto** com o back (cross-origin, com credenciais). Não há proxy: o cookie de
+sessão (HttpOnly, `SameSite=None; Secure`) pertence ao domínio do back, então não atravessaria
+um proxy no domínio do front. CORS é resolvido pelo back (origens exatas) e CSRF é mitigado por
+checagem de `Origin` em requisições mutáveis.
 
 ## 1. Back no Render
 
@@ -18,7 +19,8 @@ produção**. Em dev o front usa `http://localhost:8000` direto (CORS já config
 3. No serviço `tcg-vault-api`, preencha as variáveis marcadas `sync: false`:
    - `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` — do seu projeto Google Cloud (mesmos usados no dev).
    - `GOOGLE_REDIRECT_URI` — `https://SEU-BACK/auth/callback` (SEU-BACK = URL do serviço no Render).
-   - `FRONTEND_URL` — `https://SEU-FRONT` (domínio do Vercel, passo 2).
+   - `FRONTEND_URL` — `https://SEU-FRONT` (domínio do Vercel, passo 2). **Obrigatório**: é o valor
+     usado no CORS e na checagem de `Origin` anti-CSRF.
    - `GOOGLE_API_KEY` — chave do Google Cloud Vision.
    - `JWT_SECRET` e `DATABASE_URL` são preenchidos automaticamente. O `postgresql://`
      que o Render entrega é convertido para o dialeto `postgresql+psycopg` em
@@ -31,12 +33,11 @@ produção**. Em dev o front usa `http://localhost:8000` direto (CORS já config
 
 1. No Vercel: **Add New → Project**, importe o repo (raiz do front).
 2. Framework Preset: **Angular** (auto-detecção). Build `npm run build`, output `dist/front/browser`.
-3. Edite `front/vercel.json`: troque `https://tcg-vault-api.onrender.com` pela URL real do back
-   (é a única coisa para ajustar).
-4. Deploy. O `/api/*` passa a ser proxiado para o back — `https://SEU-FRONT/api/health` deve responder ok.
+3. Em `front/src/environments/environment.prod.ts`, `apiBase` deve ser a URL **direta** do back
+   (`https://SEU-BACK`) — hoje `https://tcg-vault-api.onrender.com`. Ajuste se a sua URL divergir.
+4. Deploy. A sessão usa cookie HttpOnly enviado pelo navegador em todas as chamadas (credenciais).
 
-> Sem `.env` no front: a base da API é `/api` no build de produção (environment.prod.ts) e o
-> proxy resolve. Não coloque segredos no front.
+> Sem `.env` no front: a base da API fica em `environment.prod.ts`. Não coloque segredos no front.
 
 ## 3. Google OAuth em produção
 
@@ -44,6 +45,7 @@ produção**. Em dev o front usa `http://localhost:8000` direto (CORS já config
 2. Em **Authorized redirect URIs**, adicione `https://SEU-BACK/auth/callback`.
 3. Garanta que o domínio do front esteja em **Authorized JavaScript origins** (recomendado).
 4. O back usa as MESMAS credenciais dev/prod; apenas o `GOOGLE_REDIRECT_URI` muda por ambiente.
+5. O `FRONTEND_URL` do Render deve ser **exatamente** o domínio do Vercel (CORS + anti-CSRF).
 
 ## Caveats aceitos no MVP
 
@@ -54,10 +56,11 @@ produção**. Em dev o front usa `http://localhost:8000` direto (CORS já config
 | Cold start free tier | ~30-50s na primeira request | plano pago (always-on) quando for a público |
 | Scryfall | API pública, sem chave | cache 5 min já implementado; usar bulk data se precisar escalar |
 | OCR | Google Vision exige API key no prod | sem a key, use `OCR_PROVIDER=none` (busca manual) |
+| Anti-CSRF | checagem de `Origin` (não double-submit) | suficiente no MVP; evoluir se necessário |
 
-## Segurança obrigatória antes de divulgar
+## Segurança
 
 - [x] `JWT_SECRET` real (gerado automaticamente no Render; o back avisa no log se estiver no default).
 - [x] `.env` fora do git (`.gitignore`), credenciais só no painel do Render.
-- [ ] JWT em HttpOnly cookie (hoje vai em `localStorage`) — item de backlog antes de abrir para o público.
+- [x] JWT em cookie **HttpOnly** (`SameSite=None; Secure`) — JS não acessa o token; anti-CSRF via Origin.
 - [ ] Termos de uso / política de privacidade se houver contas de terceiros.

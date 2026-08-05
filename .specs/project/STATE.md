@@ -12,6 +12,7 @@
 
 | Data | Decisão | Justificativa | Trade-off |
 |------|---------|---------------|-----------|
+| 2026-08-05 | Sessão em cookie HttpOnly (`SameSite=None; Secure`) em vez de JWT no localStorage | Token inacessível a JS (mitiga XSS); cookie atravessa SSO | Front precisa falar direto com o back (cross-origin); anti-CSRF via checagem de Origin; proxy do Vercel removido |
 | 2026-08-05 | Deploy MVP: front Vercel (proxy `/api/*`), back Render (Blueprint), Postgres opcional | Front estático + API são ambientes independentes; proxy elimina CORS em produção | Back free tier dorme (cold start ~40s); SQLite/upload efêmeros sem Postgres |
 | 2026-08-05 | Cartas PT exibem nome/tipo/descrição localizados (`printed_name`, `printed_type_line`, `description`) | Usuário quer conteúdo em português | Descrição cai para inglês (oracle_text) quando não há impressão PT; preço segue USD |
 | 2026-08-05 | Suporte a cartas PT: busca localizada `lang:pt` com match exato do `printed_name` | OCR lê nome impresso; Scryfall não tem operador `printed:` | 2 chamadas por scan quando sem match EN (cache 5min) |
@@ -49,5 +50,4 @@
 - Outros TCGs (Pokémon, Yu-Gi-Oh, One Piece)
 - Cofres múltiplos, preço/valorização, busca avançada
 - PWA offline, app mobile
-- Migrar JWT para HttpOnly cookie
 - Migrações Alembic
