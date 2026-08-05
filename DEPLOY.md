@@ -13,7 +13,7 @@ produção**. Em dev o front usa `http://localhost:8000` direto (CORS já config
 ## 1. Back no Render
 
 1. Crie um repo Git e envie o projeto para o GitHub.
-2. No Render: **New → Blueprint**, conecte o repo e selecione `back/render.yaml`.
+2. No Render: **New → Blueprint**, conecte o repo e selecione o `render.yaml` da raiz.
    - Ele cria o web service `tcg-vault-api` + o Postgres `tcg-vault-db`.
 3. No serviço `tcg-vault-api`, preencha as variáveis marcadas `sync: false`:
    - `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` — do seu projeto Google Cloud (mesmos usados no dev).

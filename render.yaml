@@ -3,6 +3,7 @@
 services:
   - type: web
     name: tcg-vault-api
+    rootDir: back
     runtime: python
     plan: free
     autoDeploy: true
