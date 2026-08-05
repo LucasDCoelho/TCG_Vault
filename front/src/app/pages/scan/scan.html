@@ -1,0 +1,93 @@
+<div class="container">
+  <header class="page-head">
+    <h1>Escanear carta</h1>
+    <p>Fotografe a carta ou envie uma imagem. A gente reconhece e guarda no seu cofre.</p>
+  </header>
+
+  @if (!file) {
+    <div class="dropzone" (click)="fileInput.click()" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
+      <input #fileInput type="file" accept="image/*" hidden (change)="onFileSelected($event)" />
+      <svg viewBox="0 0 48 48" width="56" height="56" fill="none" stroke="var(--color-primary)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="6" y="12" width="36" height="26" rx="4"/>
+        <path d="M6 26l9-9 8 8 6-6 13 13M30 20h.01"/>
+      </svg>
+      <p><strong>Toque para escolher uma imagem</strong></p>
+      <p class="hint">ou arraste e solte aqui · JPEG/PNG/WebP até 10MB</p>
+    </div>
+  } @else {
+    <div class="scan-flow">
+      <div class="preview-col">
+        <div class="preview card">
+          <img [src]="previewUrl!" alt="Prévia da carta" />
+        </div>
+        <button class="btn btn-secondary" (click)="reset()" [disabled]="scanning || saving">Trocar imagem</button>
+      </div>
+
+      <div class="actions-col">
+        @if (!result) {
+          <button class="btn btn-primary btn-block" (click)="scan()" [disabled]="scanning">
+            @if (scanning) { <span class="spinner"></span> } @else { Escanear carta }
+          </button>
+        } @else if (result.candidates.length === 0) {
+          <div class="notice card">
+            <p>{{ result.message }}</p>
+            @if (result.recognized_text) {
+              <p class="ocr-text">OCR: "{{ result.recognized_text }}"</p>
+            }
+          </div>
+        }
+
+        @if (error) {
+          <p class="error">{{ error }}</p>
+        }
+
+        @if (result && result.candidates.length > 0 && !selected) {
+          <div class="notice card">
+            <p>Encontramos {{ result.candidates.length }} carta(s). Escolha a que corresponde à sua:</p>
+          </div>
+        }
+
+        @if (manual) {
+          <div class="manual-search card">
+            <h2>Buscar manualmente</h2>
+            <div class="search-row">
+              <input class="input" [(ngModel)]="query" placeholder="Nome da carta (ex: Black Lotus)" (keyup.enter)="search()" />
+              <button class="btn btn-secondary" (click)="search()" [disabled]="searching || !query.trim()">Buscar</button>
+            </div>
+          </div>
+        }
+
+        @if ((result?.candidates?.length ?? 0) > 0) {
+          <div class="candidates">
+            @for (cand of result!.candidates; track $index) {
+              <button class="candidate card" (click)="select(cand)">
+                @if (cand.image_uri) {
+                  <img [src]="fullUrl(cand.image_uri)" [alt]="cand.name" />
+                }
+                <div class="cand-info">
+                  <span class="cand-name">{{ cand.printed_name || cand.name }}</span>
+                  <span class="cand-set">{{ cand.set_name }} · #{{ cand.collector_number }}</span>
+                  <span class="chip">{{ cand.rarity }}</span>
+                </div>
+                <svg class="chevron" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+              </button>
+            }
+          </div>
+        }
+
+        @if (selected) {
+          <div class="confirm card">
+            <div class="confirm-head">
+              <h2>{{ selected.printed_name || selected.name }}</h2>
+              <button class="btn btn-ghost" (click)="selected = null">Trocar</button>
+            </div>
+            <p class="muted">{{ selected.set_name }} · #{{ selected.collector_number }} · {{ selected.rarity }}</p>
+            <button class="btn btn-primary btn-block" (click)="confirm()" [disabled]="saving">
+              @if (saving) { <span class="spinner"></span> } @else { Guardar no cofre }
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

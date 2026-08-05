@@ -1,0 +1,45 @@
+<div class="container">
+  @if (loading) {
+    <div class="loading-block"><span class="spinner"></span><span>Carregando carta…</span></div>
+  } @else if (error) {
+    <div class="empty-state card">
+      <p>{{ error }}</p>
+      <a class="btn btn-secondary" routerLink="/vault">Voltar ao cofre</a>
+    </div>
+  } @else if (card) {
+    <a class="back" routerLink="/vault">← Voltar ao cofre</a>
+    <div class="detail">
+      <div class="media card">
+        @if (fullUrl(card.photo_url || card.image_uri)) {
+          <img [src]="fullUrl(card.photo_url || card.image_uri)" [alt]="card.name" />
+        } @else {
+          <div class="no-img">?</div>
+        }
+      </div>
+      <div class="info">
+        <div class="chip">{{ card.rarity }}</div>
+        <h1>{{ card.printed_name || card.name }}</h1>
+        @if (card.printed_name) {
+          <p class="en-name">{{ card.name }}</p>
+        }
+        <p class="muted">{{ card.set_name }} ({{ card.set_code }})</p>
+
+        @if (card.printed_type_line) {
+          <p class="type-line">{{ card.printed_type_line }}</p>
+        }
+        @if (card.description) {
+          <p class="description">{{ card.description }}</p>
+        }
+
+        <dl class="facts">
+          <div><dt>Número da coleção</dt><dd>#{{ card.collector_number || '—' }}</dd></div>
+          <div><dt>Preço médio (USD)</dt><dd>{{ card.price_usd != null ? '$' + card.price_usd : '—' }}</dd></div>
+          <div><dt>Adicionada em</dt><dd>{{ card.created_at | date: 'dd/MM/yyyy' }}</dd></div>
+        </dl>
+        @if (card.scryfall_uri) {
+          <a class="btn btn-secondary" [href]="card.scryfall_uri" target="_blank" rel="noopener">Ver na Scryfall</a>
+        }
+      </div>
+    </div>
+  }
+</div>

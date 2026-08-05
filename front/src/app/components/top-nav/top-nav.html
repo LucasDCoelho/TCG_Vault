@@ -1,0 +1,30 @@
+<header class="topbar">
+  <div class="container topbar-inner">
+    <a class="brand" routerLink="/">
+      <svg class="brand-logo" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <ellipse cx="15" cy="11" rx="5.5" ry="14" fill="var(--color-primary)" transform="rotate(-18 15 11)" />
+        <ellipse cx="33" cy="11" rx="5.5" ry="14" fill="var(--color-primary)" transform="rotate(18 33 11)" />
+        <circle cx="24" cy="29" r="13" fill="var(--color-primary)" />
+        <circle cx="19.5" cy="27" r="1.6" fill="#fff" />
+        <circle cx="28.5" cy="27" r="1.6" fill="#fff" />
+        <path d="M20.5 33.5c2.2 1.8 4.8 1.8 7 0" stroke="#fff" stroke-width="2" stroke-linecap="round" />
+      </svg>
+      <span class="brand-name">RabbitLab</span>
+      <span class="brand-sub">TCG Vault</span>
+    </a>
+
+    @if (authService.isAuthenticated()) {
+      <nav class="nav" aria-label="Principal">
+        <a routerLink="/vault" routerLinkActive="active">Cofre</a>
+        <a routerLink="/scan" routerLinkActive="active">Escanear</a>
+      </nav>
+      <div class="user">
+        @if (authService.user()?.avatar_url) {
+          <img class="avatar" [src]="fullUrl(authService.user()!.avatar_url)" alt="" />
+        }
+        <span class="user-name">{{ authService.user()?.name || 'Conta' }}</span>
+        <button class="btn btn-ghost" (click)="logout()" aria-label="Sair">Sair</button>
+      </div>
+    }
+  </div>
+</header>

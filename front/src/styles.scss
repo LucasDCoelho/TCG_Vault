@@ -1,0 +1,136 @@
+/* RabbitLab TCG Vault — design tokens (DESIGN.md) */
+:root {
+  --color-primary: #F97316;
+  --color-primary-strong: #EA580C;
+  --color-primary-soft: #FFEDD5;
+  --color-accent: #FB923C;
+  --color-background: #FFFFFF;
+  --color-surface: #FFF7ED;
+  --color-surface-alt: #FAFAF9;
+  --color-foreground: #1C1917;
+  --color-foreground-muted: #57534E;
+  --color-border: #E7E5E4;
+  --color-success: #16A34A;
+  --color-error: #DC2626;
+  --color-warning: #D97706;
+  --radius-card: 12px;
+  --radius-btn: 8px;
+  --radius-chip: 999px;
+  --shadow-card: 0 1px 3px rgba(28, 25, 23, 0.08);
+  --shadow-raised: 0 8px 24px rgba(249, 115, 22, 0.12);
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--font-sans);
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4 { line-height: 1.2; margin: 0; }
+a { color: var(--color-primary-strong); }
+button { font-family: inherit; cursor: pointer; }
+img { display: block; }
+
+/* Botões */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 20px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-btn);
+  font-weight: 600;
+  font-size: 15px;
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+.btn:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-primary { background: var(--color-primary); color: #fff; }
+.btn-primary:hover:not(:disabled) { background: var(--color-primary-strong); }
+.btn-secondary {
+  background: var(--color-surface-alt);
+  color: var(--color-foreground);
+  border-color: var(--color-border);
+}
+.btn-secondary:hover:not(:disabled) { border-color: var(--color-primary); color: var(--color-primary-strong); }
+.btn-ghost { background: transparent; color: var(--color-foreground-muted); }
+.btn-ghost:hover:not(:disabled) { color: var(--color-error); }
+
+/* Cards */
+.card {
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+
+/* Chips */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  background: var(--color-primary-soft);
+  color: #C2410C;
+  padding: 2px 10px;
+  border-radius: var(--radius-chip);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Inputs */
+.input {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-btn);
+  font-size: 15px;
+  font-family: inherit;
+  background: var(--color-background);
+}
+.input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary-soft);
+}
+.input:disabled { background: var(--color-surface-alt); }
+
+/* Container */
+.container { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+
+/* Spinner */
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid var(--color-primary-soft);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Loading geral */
+.loading-block { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 48px 0; color: var(--color-foreground-muted); }
+
+/* Toast simples */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-foreground);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: var(--radius-btn);
+  box-shadow: var(--shadow-raised);
+  font-size: 14px;
+  z-index: 1000;
+  animation: toast-in 0.25s ease;
+}
+@keyframes toast-in { from { opacity: 0; transform: translateX(-50%) translateY(8px); } }
