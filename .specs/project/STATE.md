@@ -1,12 +1,12 @@
 # STATE — Memória do projeto
 
-> Última atualização: 2026-08-05. Sessão de build do MVP concluída.
+> Última atualização: 2026-08-05. **MVP no ar** (Vercel + Render + OAuth Google funcionando ponta a ponta).
 
 ## Status
 
-- **Fase atual:** Credenciais Google configuradas e testadas (OAuth + Vision). MVP pronto para uso real local.
+- **Fase atual:** MVP publicado. Front no Vercel, back no Render (Postgres), login Google funcionando, proxy `/api/*` conectando os dois.
 - **Última atualização:** 2026-08-05
-- **Próxima ação:** usuário testar login real no browser; se `redirect_uri` do Console divergir, corrigir lá
+- **Próxima ação:** decidir entre divulgar para testadores (segurança: HttpOnly cookie antes) ou atacar features de produto (mais TCGs / filtros).
 
 ## Decisões registradas
 
