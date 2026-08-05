@@ -3,8 +3,23 @@ from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 
 from .config import settings
 
-connect_args = {"check_same_thread": False} if settings.database_url.startswith("sqlite") else {}
-engine = create_engine(settings.database_url, connect_args=connect_args)
+
+def _normalize_db_url(url: str) -> str:
+    """Garante o dialeto psycopg 3 (instalado) para URLs Postgres.
+
+    Sem isso, `postgresql://...` usa psycopg2 (não instalado) e `postgres://...`
+    nem é reconhecido pelo SQLAlchemy 2. Providers (ex.: Render) costumam entregar
+    a URL sem o sufixo de driver."""
+    if url.startswith("postgresql://"):
+        return "postgresql+psycopg://" + url[len("postgresql://") :]
+    if url.startswith("postgres://"):
+        return "postgresql+psycopg://" + url[len("postgres://") :]
+    return url
+
+
+database_url = _normalize_db_url(settings.database_url)
+connect_args = {"check_same_thread": False} if database_url.startswith("sqlite") else {}
+engine = create_engine(database_url, connect_args=connect_args)
 SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
 
 

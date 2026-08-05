@@ -20,8 +20,9 @@ produção**. Em dev o front usa `http://localhost:8000` direto (CORS já config
    - `GOOGLE_REDIRECT_URI` — `https://SEU-BACK/auth/callback` (SEU-BACK = URL do serviço no Render).
    - `FRONTEND_URL` — `https://SEU-FRONT` (domínio do Vercel, passo 2).
    - `GOOGLE_API_KEY` — chave do Google Cloud Vision.
-   - `JWT_SECRET` e `DATABASE_URL` são preenchidos automaticamente (o `DATABASE_URL` é
-     montado com o dialeto `postgresql+psycopg`, necessário para o psycopg 3 no Python 3.14).
+   - `JWT_SECRET` e `DATABASE_URL` são preenchidos automaticamente. O `postgresql://`
+     que o Render entrega é convertido para o dialeto `postgresql+psycopg` em
+     `back/app/database.py` (psycopg 3, suportado no Python 3.14).
 4. Deploy. Teste `https://SEU-BACK/health` → deve responder `{"status":"ok",...}`.
 
 > Plano free do Render **dorme** após ~15 min ocioso: a primeira requisição demora ~30-50s (cold start).

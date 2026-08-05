@@ -32,30 +32,12 @@ services:
       # Preencher com a chave do Google Cloud Vision.
       - key: GOOGLE_API_KEY
         sync: false
-      # DATABASE_URL usa o dialeto psycopg 3 (psycopg[binary]), suportado no Python 3.14.
-      # O Render preenche os valores entre {{ }} a partir do banco abaixo.
+      # DATABASE_URL chega como postgresql://... (sem driver); o app converte para
+      # postgresql+psycopg em app/database.py (psycopg 3, suportado no Python 3.14).
       - key: DATABASE_URL
-        value: postgresql+psycopg://{{DATABASE_USER}}:{{DATABASE_PASSWORD}}@{{DATABASE_HOST}}:{{DATABASE_PORT}}/{{DATABASE_NAME}}
-      - key: DATABASE_USER
         fromDatabase:
           name: tcg-vault-db
-          property: user
-      - key: DATABASE_PASSWORD
-        fromDatabase:
-          name: tcg-vault-db
-          property: password
-      - key: DATABASE_HOST
-        fromDatabase:
-          name: tcg-vault-db
-          property: host
-      - key: DATABASE_PORT
-        fromDatabase:
-          name: tcg-vault-db
-          property: port
-      - key: DATABASE_NAME
-        fromDatabase:
-          name: tcg-vault-db
-          property: database
+          property: connectionString
 
 databases:
   - name: tcg-vault-db
