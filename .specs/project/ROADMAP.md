@@ -13,6 +13,7 @@
 - [x] Deploy: front Vercel + back Render + Postgres, OAuth Google em produção
 - [x] MVP **no ar** (login Google ponta a ponta funcionando) — 2026-08-05
 - [x] Segurança pré-divulgação: JWT em cookie HttpOnly (SameSite=None; Secure) + anti-CSRF via Origin
+- [x] Landing page pública (SEO): estática na raiz `/`, app em `/app/`, robots + sitemap (implementada e validada; aguardando deploy)
 
 ## Pós-MVP (backlog)
 

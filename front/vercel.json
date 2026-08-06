@@ -1,0 +1,7 @@
+{
+  "buildCommand": "npm run build:deploy",
+  "outputDirectory": "dist/front/browser",
+  "rewrites": [
+    { "source": "/app/:path*", "destination": "/app/index.html" }
+  ]
+}

@@ -64,7 +64,7 @@ def callback(code: str = Query(...), db: Session = Depends(get_db)):
     então chama /auth/me com o cookie para fechar a sessão."""
     if not settings.google_enabled:
         user = _dev_login(db)
-        redirect = RedirectResponse(f"{settings.frontend_url}/auth/callback")
+        redirect = RedirectResponse(f"{settings.frontend_url}/app/auth/callback")
         set_auth_cookie(redirect, create_access_token(user.google_sub))
         return redirect
 
@@ -97,7 +97,7 @@ def callback(code: str = Query(...), db: Session = Depends(get_db)):
         avatar=info.get("picture", ""),
     )
     jwt_token = create_access_token(user.google_sub)
-    redirect = RedirectResponse(f"{settings.frontend_url}/auth/callback")
+    redirect = RedirectResponse(f"{settings.frontend_url}/app/auth/callback")
     set_auth_cookie(redirect, jwt_token)
     return redirect
 

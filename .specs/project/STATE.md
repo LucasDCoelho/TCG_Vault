@@ -6,7 +6,7 @@
 
 - **Fase atual:** MVP publicado. Front no Vercel, back no Render (Postgres), login Google funcionando, proxy `/api/*` conectando os dois.
 - **Última atualização:** 2026-08-05
-- **Próxima ação:** decidir entre divulgar para testadores (segurança: HttpOnly cookie antes) ou atacar features de produto (mais TCGs / filtros).
+- **Próxima ação:** landing page estática (SEO) implementada e validada — **deploy no Vercel** (build agora é `npm run build:deploy`, output `dist/front/browser`, app sob `/app/`) e registrar no Google Search Console.
 
 ## Decisões registradas
 
@@ -26,7 +26,7 @@
 | 2026-08-05 | Angular 20 (CLI 20) em vez da mais nova | Node 22.19 < exigência da Angular mais nova (≥22.22.3) | Versão um release atrás |
 | 2026-08-05 | Scan stateless: front reenvia foto no confirmar | Simplicidade | Upload duplicado (≤10MB) |
 | 2026-08-05 | JWT em localStorage | Simplicidade | Superfície de XSS (revisar pós-MVP) |
-| 2026-08-05 | `create_all` sem Alembic | Simplicidade MVP | Migrações manuais |
+| 2026-08-05 | Landing page estática (SEO) na raiz `/` + app movido para `/app` (`baseHref="/app/"`, fallback SPA no Vercel, redirect OAuth → `/app/auth/callback`) | SPA Angular indexa mal no Google; landing em HTML puro rankeia e converte; um único domínio concentra a autoridade | URLs públicas do app mudaram (`/vault` → `/app/vault`); deep links antigos quebram |
 
 ## Bloqueios atuais
 
@@ -49,6 +49,12 @@
   ("No Access-Control-Allow-Origin"). Foi a causa do primeiro erro pós-HttpOnly.
 - Cookie HttpOnly exige front falando DIRETO com o back: proxy (rewrite do Vercel)
   prende o cookie no domínio do back e ele nunca chega ao front. Proxy removido.
+- FastAPI 0.141+ com `include_router` lazy: o `TestClient` antigo (httpx 0.28) pode
+  retornar 404 para rotas com query string quando há vários routers inclusos — é
+  artefato de teste. SEMPRE validar contra um servidor real (uvicorn + curl).
+- Deploy no Vercel com landing na raiz: o script `build:deploy` precisa MOVER o
+  bundle (não copiar) para `app/`, senão duplica JS/CSS na raiz e o rewrite de
+  fallback não funciona como esperado.
 
 ## Deferred / Backlog
 

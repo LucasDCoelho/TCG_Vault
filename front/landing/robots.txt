@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /app/
+
+Sitemap: https://tcg-vault-lyart.vercel.app/sitemap.xml
