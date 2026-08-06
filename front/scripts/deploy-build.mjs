@@ -19,8 +19,10 @@ for (const entry of await readdir(dist, { withFileTypes: true })) {
   await rename(join(dist, entry.name), join(appDir, entry.name));
 }
 
-for (const file of ['index.html', 'robots.txt', 'sitemap.xml']) {
-  await cp(join(landing, file), join(dist, file));
+for (const entry of await readdir(landing, { withFileTypes: true })) {
+  if (entry.isFile()) {
+    await cp(join(landing, entry.name), join(dist, entry.name));
+  }
 }
 
 console.log('build:deploy ok — landing na raiz, SPA em /app/');
