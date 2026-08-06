@@ -44,6 +44,11 @@
 - Angular CLI mais nova exige Node ≥22.22.3; Node 22.19 → Angular 20 (compatível).
 - Campo `scryfall` acessado com rota fuzzy `order=relevance` pode trazer cartas
   "piada" (ex: Blacker Lotus) — sempre mostrar lista de candidatos para o usuário.
+- `FRONTEND_URL` no Render alimenta CORS, anti-CSRF e o redirect do OAuth — sem ele
+  com o valor exato do domínio do front, o login cross-origin falha silenciosamente
+  ("No Access-Control-Allow-Origin"). Foi a causa do primeiro erro pós-HttpOnly.
+- Cookie HttpOnly exige front falando DIRETO com o back: proxy (rewrite do Vercel)
+  prende o cookie no domínio do back e ele nunca chega ao front. Proxy removido.
 
 ## Deferred / Backlog
 
